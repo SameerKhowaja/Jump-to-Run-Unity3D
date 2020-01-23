@@ -11,6 +11,7 @@ public class playerControl : MonoBehaviour
 
     bool isGrounded;
     public Transform feetPos;
+    public Transform centerPos;
     public float checkRadius;
     public LayerMask whatIsGround;
 
@@ -34,8 +35,7 @@ public class playerControl : MonoBehaviour
     void Update()
     {
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
-
-        //jump
+        //jump for Keyboard Input
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
         {
             isJumping = true;
@@ -60,7 +60,47 @@ public class playerControl : MonoBehaviour
         {
             isJumping = false;
         }
+        //------------------------------------------------------------
+        
 
+        //jump for Mobile Inputs
+        if (Input.touchCount > 0)
+        {
+            Touch touch1 = Input.GetTouch(0);
+            Vector3 touch_pos = Camera.main.ScreenToWorldPoint(touch1.position);
+            touch_pos.z = 0;
+
+            if((touch_pos.x < centerPos.transform.position.x))
+            {
+                //Debug.Log(touch_pos);
+                if ((touch1.phase == TouchPhase.Began) && isGrounded == true)
+                {
+                    isJumping = true;
+                    jumpTimeCounter = jumpTime;
+                    Player_RB.velocity = Vector2.up * Jump_Force;
+                }
+
+                if (isJumping == true)
+                {
+                    if (jumpTimeCounter > 0)
+                    {
+                        Player_RB.velocity = Vector2.up * Jump_Force;
+                        jumpTimeCounter -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        isJumping = false;
+                    }
+                }
+
+                if (touch1.phase == TouchPhase.Ended)
+                {
+                    isJumping = false;
+                }
+            }
+            
+        }
+        //-----------------------------------------------------------
 
         fallPos = transform.position.y;
         if (fallPos < -1.5)

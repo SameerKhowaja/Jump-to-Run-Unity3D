@@ -30,7 +30,7 @@ public class BaseSpawnner : MonoBehaviour
         StartTime = 0.5f;
         SpawnTime = 1f;
 
-        Position = new Vector3(9.5f, -2.3f, 0f);
+        Position = new Vector3(-1.7f, -2.3f, 0f);
         Instantiate(Base[0], Position, Quaternion.identity);
     }
 
